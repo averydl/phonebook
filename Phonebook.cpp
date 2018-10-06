@@ -21,7 +21,7 @@
  */
 Phonebook::Phonebook(int _size) {
     size = _size;                               //set 'size' field  equal to size argument
-	contacts = new Contact[size];               //dynamically allocate memory for array to hold Contact* pointers
+	contacts = new Contact*[size];               //dynamically allocate memory for array to hold Contact* pointers
     contactnum = 0;                             //set number of contacts equal to 0
 }
 
@@ -49,7 +49,7 @@ int Phonebook::getsize() {
  */
 void Phonebook::upsize() {
 	//create enlarged array (double size)
-	Contact* copy = new Contact[size*2];
+	Contact** copy = new Contact*[size*2];
 	
 	//copy over all Contacts to new array element-by-element
     for(int i = 0; i < size; i++) {
@@ -72,15 +72,13 @@ void Phonebook::upsize() {
  */
 int Phonebook::indexof(std::string _name) const {
     //convert the contact name argument string to upper-case
-    for(int i = 0; i < _name.size(); i++)
-        _name[i] = std::toupper(_name[i]);
     std::transform(_name.begin(), _name.end(), _name.begin(), ::toupper);
     
 	// iterate through each contact pointed in array and check
     // if its 'name' field is equal to 'checkname'
-	for(int i = 0; i < size; i++) {
+	for(int i = 0; i < contactnum; i++) {
         //store current contact name as upper-case string
-        std::string curname = contacts[i].getName();
+        std::string curname = contacts[i] -> getName();
         
         //convert curname string to upper case
         for(int i = 0; i < curname.size(); i++)
@@ -99,9 +97,9 @@ int Phonebook::indexof(std::string _name) const {
  * This method will add a Contact to the Phonebook 'contacts' array at the next available entry,
  * and increment the contactnum to correspond to the new number of contacts stored in the Phonebook
  */
-void Phonebook::add(Contact c) {
+void Phonebook::add(Contact* c) {
     //check if contacts array can hold another contact; if not, upsize it
-    if(size <= contactnum) {
+    if(size <= contactnum + 1) {
         upsize();
     }
     //add new Contact to the contacts array and increment contactnum
@@ -138,7 +136,7 @@ void Phonebook::remove(std::string _name) {
 std::string Phonebook::search(std::string _name) const {
     int index = indexof(_name);
     if(index != -1) {               //check that the name exists in the phonebook
-        return contacts[index].getNumber();
+        return contacts[index] -> getNumber();
     } else {
         return "NAME NOT FOUND";
     }
@@ -151,5 +149,5 @@ std::string Phonebook::search(std::string _name) const {
  */
 void Phonebook::listall() {
     for(int i = 0; i < contactnum; i++)
-        std::cout << contacts[i];
+        std::cout << (*contacts[i]);
 }

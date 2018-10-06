@@ -34,9 +34,9 @@ std::vector<std::string> split(const std::string& str, const std::string& delim)
 
 /*
  * Reads a file containing line-separated contact strings in the format
- * "name number", and turns each of them into a Contact object; these Contact
+ * "name number", and uses them to instantiate a Contact object; these Contact
  * objects are each stored in the global Phonebook variable "pb". Code for this
- * method was developed in part using:
+ * method was developed in part by referencing code from: 
  *
  * The "CS300Fall18_Assignment1.pdf" assignment file,
  * provided by Professor Fatma Cemile Cerce, Chair @ Bellevue College
@@ -75,8 +75,7 @@ void readfile(std::string filename) {
         name = tokens.back() + name;            //add last token (no space) to the 'name' string
         
         Contact* c = new Contact(name, number);
-        pb -> add(*c);
-        delete c;
+        pb -> add(c);
     }
 }
 
@@ -97,7 +96,7 @@ int main(int argc, char* argv[]) {
         readfile(argv[1]);  //read the file provided in the command-line argument
     
     //Introduction message: displayed once, when the application is started
-    std::cout << "*** MY PHONEBOOK APPLICATION ***\nPlease choose an operation:" << std::endl;
+    std::cout << "*** MY PHONEBOOK APPLICATION ***\nPlease choose an operation:\n";
     
     //prompt for user input and execute the corresponding operations until the 'Quit' option is selected
     while(true) {
@@ -116,10 +115,10 @@ int main(int argc, char* argv[]) {
             
             //create new Contact from name/number and store it in the Phonebook
             Contact* c = new Contact(name, number);
-            pb -> add(*c);
+            pb -> add(c);
             delete c;
             
-            std::cout << std::endl;
+            std::cout << "\n"; 
             
         } else if(input == "S" || input == "s") {//execute "Search" operation if user enters "S" or "s"
             
@@ -130,7 +129,7 @@ int main(int argc, char* argv[]) {
             std::getline(std::cin, name);
             
             //output result of Phonebook search for 'name'
-            std::cout << "Phone Number: " << (pb -> search(name)) << std::endl << std::endl;
+            std::cout << "Phone Number: " << (pb -> search(name)) << "\n\n";
             
         } else if (input == "D" || input == "d") { //execute "Delete" operation if user enters "D" or "d"
             
@@ -141,7 +140,7 @@ int main(int argc, char* argv[]) {
             std::getline(std::cin, name);
             
             pb -> remove(name);
-            std::cout << std::endl;
+            std::cout << "\n";
             
         } else if(input == "L" || input == "l") { //execute "List" operation if user enters "L" or "l"
             pb -> listall();
@@ -151,8 +150,8 @@ int main(int argc, char* argv[]) {
             
         } else {//if the user input is not valid, display a warning message
             
-            std::cout << "INVALID INPUT: PLEASE REVIEW THE AVAILABLE OPERATIONS AND TRY AGAIN" << std::endl;
-            std::cout << std::endl;
+            std::cout << "INVALID INPUT: PLEASE REVIEW THE AVAILABLE OPERATIONS AND TRY AGAIN\n";
+            std::cout << "\n";
             
         }
     }

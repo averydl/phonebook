@@ -29,9 +29,9 @@ class Phonebook {
     
         // Fields //
     
-		int size;						                    //size of existing Contact array
+	int size;						                        //size of existing Contact array
         int contactnum;                                     //number of contacts stored in the Phonebook
-        Contact* contacts;                                 //array holding pointers to Contacts in the Phonebook
+        Contact** contacts;                                  //pointer to array of pointers to Contacts in the Phonebook
     
         // Functions //
     
@@ -47,7 +47,7 @@ class Phonebook {
     
         void upsize();                                      //double the capacity of the Contact array and copy over existing elements
         std::string search(std::string name) const;         //returns contact number string it exists in the Phonebook, or 'name not found' otherwise
-        void add(Contact c);                                //add user-provided contact name/number to the 'Phonebook'
+        void add(Contact* c);                               //add pointer to user-provided contact to the 'contacts' array
         void remove(std::string name);                      //delete a given contact (specified by name) from the 'Phonebook'
         int indexof(std::string name) const;                //returns index of a contact name if it exists in the Phonebook, or -1 otherwise
         void listall();                                     //iterates through all Contacts stored in the phonebook and writes them to standard out
