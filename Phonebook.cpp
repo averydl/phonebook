@@ -1,7 +1,3 @@
-#include <iostream> 
-#include "Phonebook.h"
-#include "Contact.h"
-
 /*
  * Phonebook Class implementation written by: Derek Avery
  *
@@ -11,6 +7,10 @@
  *
  */
 
+#include <iostream>
+#include "Phonebook.h"
+#include "Contact.h"
+#include <algorithm>
 
 // Constructor //
 
@@ -95,16 +95,20 @@ int Phonebook::indexof(std::string _name) const {
 
 /*
  * This method will add a Contact to the Phonebook 'contacts' array at the next available entry,
- * and increment the contactnum to correspond to the new number of contacts stored in the Phonebook
+ * IFF the name does not yet exist in the Phonebook. contactnumb will be incremebted to account
+ * for the additional contact
  */
 void Phonebook::add(Contact* c) {
-    //check if contacts array can hold another contact; if not, upsize it
-    if(size <= contactnum + 1) {
-        upsize();
+    if(indexof(c -> getName()) == -1) {
+        //check if contacts array can hold another contact; if not, upsize it
+        if(size <= contactnum + 1) {
+            upsize();
+        }
+        //add new Contact to the contacts array
+        contacts[contactnum] = c;
+        //increment number of contacts by one to account for addition
+        contactnum++;
     }
-    //add new Contact to the contacts array and increment contactnum
-    contacts[contactnum] = c;
-    contactnum++;
 }
 
 /*
@@ -116,12 +120,13 @@ void Phonebook::remove(std::string _name) {
     //find the index of the contact (if such a contact exists)
     int contact_index = indexof(_name);
     
-    //check to make sure the contact exists; if so, 'delete' it
+    //check to make sure the contact exists; if so, delete it and shift remaining elements
     if(contact_index != -1) {
+        delete contacts[contact_index];
         //shift elements in 'contacts' at indices > contact_index down by 1
         for(int i = contact_index; i < contactnum; i++)
             contacts[i] = contacts[i+1];
-        //decrement the number of contacts by one due to deletion
+        //decrement the number of contacts by one to account for deletion
         contactnum--;
     }
 }
@@ -132,13 +137,12 @@ void Phonebook::remove(std::string _name) {
  * in the Phonebook. If the name does not exist, the string returned will contain output
  * indicating to the user that the contact does not exist, with the string 'name not found'
  */
-
 std::string Phonebook::search(std::string _name) const {
     int index = indexof(_name);
     if(index != -1) {               //check that the name exists in the phonebook
         return contacts[index] -> getNumber();
     } else {
-        return "NAME NOT FOUND";
+        return "";
     }
 }
 

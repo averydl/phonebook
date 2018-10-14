@@ -1,20 +1,19 @@
 #ifndef CONTACT_H
 #define CONTACT_H
 
-#include <iostream>
-#include <fstream>
-
 /*
  * Contact class header file written by:
- * 
+ *
  * Derek Avery
- * 
+ *
  * for CS 300 - Assignment 1 --- Bellevue College
- * 
+ *
  * Due 2018/10/08
- * 
+ *
  */
 
+#include <iostream>
+#include <fstream>
 
 /* 
  * The Contact class represents a person and their contact

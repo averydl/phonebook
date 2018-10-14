@@ -1,18 +1,19 @@
 #ifndef PHONEBOOK_H
 #define PHONEBOOK_H
 
+/*
+ * Phonebook application header file written by: Derek Avery
+ *
+ * Written for CS 300: Assignment 1 - Bellevue College
+ *
+ * Due 2018/10/08
+ *
+ */
+
 #include <iostream>
 #include "Contact.h"
 #include "Phonebook.h"
 
-/*
- * Phonebook application header file written by: Derek Avery
- * 
- * Written for CS 300: Assignment 1 - Bellevue College
- * 
- * Due 2018/10/08
- * 
- */
 
 /* This class includes functionality similar to a traditional phone book; it can read a given .txt file with contact
  * name/number in line-separated format and add them to a dynamic array of 'Contact' objects. It can also add/delete

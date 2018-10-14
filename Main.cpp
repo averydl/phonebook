@@ -5,7 +5,102 @@
 #include <sstream>
 #include <vector>
 
-Phonebook* pb = new Phonebook();    //Phonebook object to hold and process contacts
+// Fields //
+    
+Phonebook* pb = new Phonebook;      //phonebook object to store contacts added via text file or user input
+    
+// Functions //
+    
+int main(int argc, char* argv[]);                          //main function prototype; provides basic text-based UI and flow control
+std::vector<std::string>split(const std::string& str,
+                              const std::string& delim);    //split() function prototype; breaks string 'str' into token array using delimiter 'delim'
+
+void readfile(std::string filename);                        //readfile() function prototype; reads input text file &
+                                                                //extracts (space-delimited) contact name/number
+
+
+/*
+ * The main method provides a simple text-based user interface that prompts
+ * users for command arguments that allow manipulation of a Phonebook object.
+ * Users may add, remove, list or search existing contacts. This method will
+ * also accept a command-line argument representing the name of a text file
+ * with contact information; if this argument is provided, the file will be read
+ * and new Contacts from the fill will be generated and added to the Phonebook
+ */
+
+int main(int argc, char* argv[]) {
+    std::string const MENU = "A(Add) | S (Search) | D (Delete) | L (List) | Q (Quit): "; //string showing user input options
+    
+    std::string input;      //user input string
+    if(argc > 1)            //check to see if command-line argument (text file name) has been entered
+        readfile(argv[1]);  //read the file provided in the command-line argument
+    
+    //Introduction message: displayed once, when the application is started
+    std::cout << "*** MY PHONEBOOK APPLICATION ***\nPlease choose an operation:\n";
+    
+    //prompt for user input and execute the corresponding operations until the 'Quit' option is selected
+    while(true) {
+        std::cout << MENU;
+        std::getline(std::cin, input);
+        
+        if(input == "A" || input == "a") {  //execute "Add" operation if user enters "A" or "a"
+            
+            std::string name, number;     //variables to store name/number input by user
+            
+            //prompt for and store user input for name/number
+            std::cout << "Enter name: ";
+            std::getline(std::cin, name);
+            std::cout << "Enter number: ";
+            std::getline(std::cin, number);
+            
+            //create new Contact from name/number and store it in the Phonebook
+            Contact* c = new Contact(name, number);
+            pb -> add(c);
+            
+            std::cout << "\n";
+            
+        } else if(input == "S" || input == "s") {//execute "Search" operation if user enters "S" or "s"
+            
+            std::string name, number;       //variables to store name (user input) and number (function output)
+            
+            //prompt for and store user-input name
+            std::cout << "Enter name: ";
+            std::getline(std::cin, name);
+            
+            //output result of Phonebook search for 'name'
+            std::string result = pb -> search(name);
+            if(result == "")
+                std::cout << "NAME NOT FOUND\n\n";
+            else
+                std::cout << "Phone Number: " << result << "\n\n";
+            
+        } else if (input == "D" || input == "d") { //execute "Delete" operation if user enters "D" or "d"
+            
+            std::string name, number;     //variable to store name input by user
+            
+            //prompt for and store user input for name/number
+            std::cout << "Enter name: ";
+            std::getline(std::cin, name);
+            
+            pb -> remove(name);
+            std::cout << "\n";  //pad output with empty line
+            
+        } else if(input == "L" || input == "l") { //execute "List" operation if user enters "L" or "l"
+            pb -> listall();
+            std::cout << "\n";  //pad output with empty line
+            
+        } else if(input == "Q" || input == "q"){ //stop execution if user enters "Q" or "q"
+            break;
+            
+        } else {//if the user input is not valid, display a warning message
+            
+            std::cout << "INVALID INPUT: PLEASE REVIEW THE AVAILABLE OPERATIONS AND TRY AGAIN\n";
+            std::cout << "\n";
+            
+        }
+    }
+    return 0;
+}
 
 /*
  * This code takes as arguments two strings, and tokenizes
@@ -17,6 +112,7 @@ Phonebook* pb = new Phonebook();    //Phonebook object to hold and process conta
  *
  * https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
  */
+
 std::vector<std::string> split(const std::string& str, const std::string& delim) {
     std::vector<std::string> tokens;
     size_t prev = 0, pos = 0;
@@ -76,84 +172,6 @@ void readfile(std::string filename) {
         
         Contact* c = new Contact(name, number);
         pb -> add(c);
-    }
-}
-
-/*
- * The main method provides a simple text-based user interface that prompts
- * users for command arguments that allow manipulation of a Phonebook object.
- * Users may add, remove, list or search existing contacts. This method will
- * also accept a command-line argument representing the name of a text file
- * with contact information; if this argument is provided, the file will be read
- * and new Contacts from the fill will be generated and added to the Phonebook
- */
-
-int main(int argc, char* argv[]) {
-    std::string const MENU = "A(Add) | S (Search) | D (Delete) | L (List) | Q (Quit): "; //string showing user input options
-    
-    std::string input;      //user input string
-    if(argc > 1)            //check to see if command-line argument (text file name) has been entered
-        readfile(argv[1]);  //read the file provided in the command-line argument
-    
-    //Introduction message: displayed once, when the application is started
-    std::cout << "*** MY PHONEBOOK APPLICATION ***\nPlease choose an operation:\n";
-    
-    //prompt for user input and execute the corresponding operations until the 'Quit' option is selected
-    while(true) {
-        std::cout << MENU;
-        std::getline(std::cin, input);
-        
-        if(input == "A" || input == "a") {  //execute "Add" operation if user enters "A" or "a"
-            
-            std::string name, number;     //variables to store name/number input by user
-            
-            //prompt for and store user input for name/number
-            std::cout << "Enter name: ";
-            std::getline(std::cin, name);
-            std::cout << "Enter number: ";
-            std::getline(std::cin, number);
-            
-            //create new Contact from name/number and store it in the Phonebook
-            Contact* c = new Contact(name, number);
-            pb -> add(c);
-            delete c;
-            
-            std::cout << "\n"; 
-            
-        } else if(input == "S" || input == "s") {//execute "Search" operation if user enters "S" or "s"
-            
-            std::string name, number;       //variables to store name (user input) and number (function output)
-            
-            //prompt for and store user-input name
-            std::cout << "Enter name: ";
-            std::getline(std::cin, name);
-            
-            //output result of Phonebook search for 'name'
-            std::cout << "Phone Number: " << (pb -> search(name)) << "\n\n";
-            
-        } else if (input == "D" || input == "d") { //execute "Delete" operation if user enters "D" or "d"
-            
-            std::string name, number;     //variable to store name input by user
-            
-            //prompt for and store user input for name/number
-            std::cout << "Enter name: ";
-            std::getline(std::cin, name);
-            
-            pb -> remove(name);
-            std::cout << "\n";
-            
-        } else if(input == "L" || input == "l") { //execute "List" operation if user enters "L" or "l"
-            pb -> listall();
-            
-        } else if(input == "Q" || input == "q"){ //stop execution if user enters "Q" or "q"
-            break;
-            
-        } else {//if the user input is not valid, display a warning message
-            
-            std::cout << "INVALID INPUT: PLEASE REVIEW THE AVAILABLE OPERATIONS AND TRY AGAIN\n";
-            std::cout << "\n";
-            
-        }
     }
 }
 
